@@ -7,8 +7,8 @@ require '../vendor/autoload.php';
 // Redis connection configuration
 $redis = new Predis\Client([
     'scheme' => 'tcp',
-    'host'   => 'host.docker.internal', // Use 'host.docker.internal' to connect to host machine
-    'port'   => 6379
+    'host'   => 'red-cu98d2aj1k6c73f64t20', // Use the hostname part of your internal URL
+    'port'   => 6379                        // The port part of your internal URL
 ]);
 
 $servername = "mysql-139adef5-kausalyas673.l.aivencloud.com"; 
