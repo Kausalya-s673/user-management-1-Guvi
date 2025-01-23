@@ -16,29 +16,28 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Print the POST array for debugging
+  
     echo '<pre>';
     print_r($_POST);
     echo '</pre>';
 
-    // Sanitize inputs
+
     $username = htmlspecialchars(trim($_POST['name']));
     $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
     $password_raw = $_POST['password'];
     $password_hashed = password_hash($password_raw, PASSWORD_DEFAULT);
 
-    // Input validation
+  
     if (empty($username) || empty($email) || empty($password_raw)) {
         die("Error: All fields are required.");
     }
 
-    // Log the sanitized inputs for debugging
     echo "Received Username: $username<br>";
     echo "Received Email: $email<br>";
     echo "Received Raw Password: $password_raw<br>";
     echo "Received Hashed Password: $password_hashed<br>";
 
-    // Insert user into the database
+
     $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
     if ($stmt === false) {
         die("Prepare failed: " . $conn->error);
@@ -56,7 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Log the executed SQL query for debugging
     echo "SQL Query: INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$password_hashed')<br>";
 
     $stmt->close();
