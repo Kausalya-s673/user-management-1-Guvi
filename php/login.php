@@ -2,8 +2,14 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require '../vendor/autoload.php';
-$redis = new Predis\Client();
+require 'vendor/autoload.php';
+
+// Redis connection configuration
+$redis = new Predis\Client([
+    'scheme' => 'tcp',
+    'host'   => 'host.docker.internal', // Use 'host.docker.internal' to connect to host machine
+    'port'   => 6379
+]);
 
 $servername = "mysql-139adef5-kausalyas673.l.aivencloud.com"; 
 $username = "avnadmin";                 
