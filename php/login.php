@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require 'vendor/autoload.php';
+require '../vendor/autoload.php';
 $redis = new Predis\Client();
 
 $servername = "mysql-139adef5-kausalyas673.l.aivencloud.com"; 
