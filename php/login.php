@@ -2,6 +2,9 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+require 'vendor/autoload.php';
+$redis = new Predis\Client();
+
 $servername = "mysql-139adef5-kausalyas673.l.aivencloud.com"; 
 $username = "avnadmin";                 
 $password = "AVNS_qTmZSaWJRKOWR7fdfCs";                  
@@ -15,24 +18,13 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  
-    echo '<pre>';
-    print_r($_POST);
-    echo '</pre>';
-
-   
     $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
     $password_raw = trim($_POST['password']);
 
-  
     if (empty($email) || empty($password_raw)) {
         die("Error: All fields are required.");
     }
 
-  
-    echo "Received Email: $email<br>";
-
-  
     $stmt = $conn->prepare("SELECT password FROM users WHERE email = ?");
     if ($stmt === false) {
         die("Prepare failed: " . $conn->error);
@@ -44,13 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_result($hashed_password);
     $stmt->fetch();
 
-    echo "Hashed Password: $hashed_password<br>";
-
- 
     if (password_verify($password_raw, $hashed_password)) {
-        echo "success";
+        session_start();
+        $sessionId = session_id();
+        $redis->set($sessionId, $email);
+        $redis->expire($sessionId, 3600); // Session expires after 1 hour
+        echo json_encode(["success" => true, "sessionId" => $sessionId]);
     } else {
-        echo "failure";
+        echo json_encode(["success" => false]);
     }
 
     $stmt->close();

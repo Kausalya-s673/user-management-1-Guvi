@@ -1,9 +1,11 @@
 <?php
 require '../vendor/autoload.php';
+$redis = new Predis\Client();
 
 $uri = "mongodb+srv://kausi_673:kausi_673@cluster0.p3bmmo2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 try {
+ 
     $client = new MongoDB\Client($uri);
     $collection = $client->user_management->profiles;
 } catch (Exception $e) {
